@@ -87,18 +87,24 @@ def parse_price(price_str):
     return 0.0
 
 def get_best_links_within_budget(results, budget):
-    """Filter and select one link per object, total price <= budget"""
+    """Select one link per piece of furniture and maximize the budget evenly without exceeding."""
     budget = float(budget)
     
     total_price = 0
     selected_links = []
     
-    for item in results:
-        price = parse_price(item["price"])
-        if total_price + price <= budget:
-            selected_links.append(item)
-            total_price += price
-
+    for furniture_results in results:
+        selected_item = None
+        for item in furniture_results:
+            price = parse_price(item["price"])
+            if total_price + price <= budget:
+                selected_item = item
+                total_price += price
+                break
+        
+        if selected_item:
+            selected_links.append(selected_item)
+    
     return selected_links, total_price
 
 st.title("Decorate Your Room")
@@ -116,6 +122,9 @@ if uploaded_file is not None:
     for i, result in enumerate(results[0].boxes):
         x1, y1, x2, y2 = map(int, result.xyxy[0])
         cropped_object = image[y1:y2, x1:x2]
+
+        class_id = int(result.cls[0])
+        class_name = yolo_model.names[class_id]
         
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         sam_predictor.set_image(image_rgb)
@@ -128,13 +137,13 @@ if uploaded_file is not None:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
             temp_file_path = temp_file.name
             cv2.imwrite(temp_file_path, masked_object)
-            st.image(temp_file_path, caption=f"Furniture {i+1}", width=150)
+            st.image(temp_file_path, caption=f"{class_name} {i+1}", width=150)
             
             object_results = reverse_image_search(temp_file_path)
-            all_results.extend(object_results)
-
+            all_results.append(object_results)
+            
             if object_results:
-                st.write("Similar Products:")
+                st.write(f"Similar Products for {class_name} {i+1}:")
                 for item in object_results:
                     st.write(item)
             else:
