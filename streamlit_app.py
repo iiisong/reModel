@@ -143,13 +143,13 @@ if uploaded_file is not None:
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
             temp_file_path = temp_file.name
             cv2.imwrite(temp_file_path, masked_object)
-            st.image(temp_file_path, caption=f"{class_name} {i+1}", width=150)
+            st.image(temp_file_path, caption=f"{class_name}", width=150)
             
             object_results = reverse_image_search(temp_file_path)
             all_results.append(object_results)
             
             if object_results:
-                st.write(f"Similar Products for {class_name} {i+1}:")
+                st.write(f"Similar Products for {class_name}:")
                 for item in object_results:
                     st.write(item)
             else:
