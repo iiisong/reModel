@@ -86,14 +86,14 @@ def parse_price(price_str):
         return float(match.group(1))
     return 0.0
 
-def get_best_links_within_budget(results, budget):
+def get_best_links_within_budget(results, budget, class_names):
     """Select one link per piece of furniture and maximize the budget without exceeding."""
     budget = float(budget)
     
     total_price = 0
     selected_links = []
     
-    for furniture_results in results:
+    for i, furniture_results in enumerate(results):
         selected_item = None
         for item in furniture_results:
             price = parse_price(item["price"])
@@ -103,7 +103,11 @@ def get_best_links_within_budget(results, budget):
                 break
         
         if selected_item:
-            selected_links.append(selected_item)
+            selected_links.append({
+                "price": selected_item["price"],
+                "link": selected_item["link"],
+                "class_name": class_names[i]
+            })
     
     return selected_links, total_price
 
@@ -125,6 +129,7 @@ if uploaded_file is not None:
 
         class_id = int(result.cls[0])
         class_name = yolo_model.names[class_id]
+        class_names.append(class_name)
         
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         sam_predictor.set_image(image_rgb)
@@ -152,13 +157,16 @@ if uploaded_file is not None:
             os.remove(temp_file_path)
     
     if all_results:
-        st.write("Optimal Budgeted Products:")
-        selected_links, total_price = get_best_links_within_budget(all_results, budget)
+        st.markdown("# Optimal Budgeted Products:")
+        selected_links, total_price = get_best_links_within_budget(all_results, budget, class_names)
         
         if selected_links:
             st.write(f"Total Price: ${total_price:.2f}")
             for item in selected_links:
-                st.write(f"Price: {item['price']} - Link: {item['link']}")
+                st.markdown(f"## {item['class_name']}")
+                st.write(f"Price: {item['price']}")
+                st.write(f"Link: {item['link']}")
+
         else:
             st.write("No items fit within the budget.")
     else:
