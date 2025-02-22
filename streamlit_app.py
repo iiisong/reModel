@@ -79,7 +79,7 @@ def reverse_image_search(image_path):
     return results
 
 def parse_price(price_str):
-    """Parse price and convert to float (handle $ or AED formats)"""
+    """Parse price and convert to float (handle all formats)"""
     price_str = price_str.replace(",", "")
     match = re.search(r"(\d+(\.\d+)?)", price_str)
     if match:
@@ -87,7 +87,7 @@ def parse_price(price_str):
     return 0.0
 
 def get_best_links_within_budget(results, budget):
-    """Select one link per piece of furniture and maximize the budget evenly without exceeding."""
+    """Select one link per piece of furniture and maximize the budget without exceeding."""
     budget = float(budget)
     
     total_price = 0
