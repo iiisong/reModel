@@ -14,6 +14,7 @@ import time
 from bs4 import BeautifulSoup
 import tempfile
 import os
+import re
 
 yolo_model = YOLO("yolov8m.pt")
 
@@ -67,7 +68,7 @@ def reverse_image_search(image_path):
             if next_link and next_link["href"].startswith("http"):
                 price = span.get_text(strip=True)[:-1]
                 href = next_link["href"]
-                results.append(f"Price: {price} - Link: {href}")
+                results.append({"price": price, "link": href})
                 collected_items += 1
                 
     except Exception as e:
@@ -77,17 +78,40 @@ def reverse_image_search(image_path):
     
     return results
 
+def parse_price(price_str):
+    """Parse price and convert to float (handle $ or AED formats)"""
+    price_str = price_str.replace(",", "")
+    match = re.search(r"(\d+(\.\d+)?)", price_str)
+    if match:
+        return float(match.group(1))
+    return 0.0
+
+def get_best_links_within_budget(results, budget):
+    """Filter and select one link per object, total price <= budget"""
+    budget = float(budget)
+    
+    total_price = 0
+    selected_links = []
+    
+    for item in results:
+        price = parse_price(item["price"])
+        if total_price + price <= budget:
+            selected_links.append(item)
+            total_price += price
+
+    return selected_links, total_price
+
 st.title("Decorate Your Room")
 
-title = st.text_input("Budget", placeholder="$1000")
-
-title = st.text_input("Style", placeholder="Modern and minimalistic")
-
+budget = st.text_input("Budget", 1000)
+style = st.text_input("Style", placeholder="Modern and minimalistic")
 uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     image = cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), 1)
     results = yolo_model(image)
+    
+    all_results = []
     
     for i, result in enumerate(results[0].boxes):
         x1, y1, x2, y2 = map(int, result.xyxy[0])
@@ -107,7 +131,8 @@ if uploaded_file is not None:
             st.image(temp_file_path, caption=f"Furniture {i+1}", width=150)
             
             object_results = reverse_image_search(temp_file_path)
-            
+            all_results.extend(object_results)
+
             if object_results:
                 st.write("Similar Products:")
                 for item in object_results:
@@ -116,3 +141,16 @@ if uploaded_file is not None:
                 st.write("No relevant items found.")
             
             os.remove(temp_file_path)
+    
+    if all_results:
+        st.write("Optimal Budgeted Products:")
+        selected_links, total_price = get_best_links_within_budget(all_results, budget)
+        
+        if selected_links:
+            st.write(f"Total Price: ${total_price:.2f}")
+            for item in selected_links:
+                st.write(f"Price: {item['price']} - Link: {item['link']}")
+        else:
+            st.write("No items fit within the budget.")
+    else:
+        st.write("No relevant items found.")
