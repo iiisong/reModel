@@ -122,6 +122,7 @@ if uploaded_file is not None:
     results = yolo_model(image)
     
     all_results = []
+    class_names = []
     
     for i, result in enumerate(results[0].boxes):
         x1, y1, x2, y2 = map(int, result.xyxy[0])
