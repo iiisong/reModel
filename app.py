@@ -10,6 +10,8 @@ import replicate
 import dotenv
 from urllib.parse import urlparse
 
+st.set_page_config(layout="wide")
+
 from src.products_parse import get_best_links_within_budget
 from src.reverse_img_search import reverse_image_search
 from src.stbdes_openai import query_redesign
@@ -107,7 +109,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
                         with minicontainer:
                             minicol1, minicol2 = st.columns([1, 1])
                             minicol1.image(temp_file_path, width=150)
-                            minicol2.markdown(f"<span style='font-weight: bold; text-transform: uppercase; font-size: 16px;'>{class_name}</span>", unsafe_allow_html=True)
+                            minicol2.markdown(f"<span style='font-weight: bold; text-transform: uppercase; font-size: 32px;'>{class_name}</span>", unsafe_allow_html=True)
                         if object_results:
                             for i, item in enumerate(object_results):
                                  domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
