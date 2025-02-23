@@ -12,7 +12,6 @@ import dotenv
 from src.stabledesign import stabledesign
 from src.products_parse import get_best_links_within_budget
 from src.reverse_img_search import reverse_image_search
-from src.object_detect import object_detect
 
 dotenv.load_dotenv()
 
@@ -63,15 +62,6 @@ if st.button('Reimagine Your Room') and uploaded_file:
     gen_image = stabledesign(image_path, prompt)
     
     st.image(gen_image, caption="After", use_container_width=True)
-
-    orig_image = np.array(image)
-    orig_img_arr = object_detect(orig_image)
-
-    for img in orig_img_arr:
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-            temp_file_path = temp_file.name
-            cv2.imwrite(temp_file_path, img)
-            st.image(img, width=150)
 
     final_image = np.array(gen_image)
     final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)

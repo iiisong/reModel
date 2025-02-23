@@ -1,19 +1,21 @@
 import torch
 import clip
 from PIL import Image
+import streamlit as st
 
-# Load the CLIP model
-model, preprocess = clip.load("ViT-B/32", device="cpu")
+def image_similarity(img1, img2):
+    model, preprocess = clip.load("ViT-B/32", device="cpu")
 
-# Load and preprocess images from different angles
-img1 = preprocess(Image.open("img-1.png")).unsqueeze(0)
-img2 = preprocess(Image.open("me.png")).unsqueeze(0)
+    img1 = preprocess(Image.open(img1)).unsqueeze(0)
+    img2 = preprocess(Image.open(img2)).unsqueeze(0)
 
-# Convert to feature embeddings
-with torch.no_grad():
-    feat1 = model.encode_image(img1)
-    feat2 = model.encode_image(img2)
+    with torch.no_grad():
+        feat1 = model.encode_image(img1)
+        feat2 = model.encode_image(img2)
 
-# Compute similarity (cosine similarity)
-cos_sim = torch.nn.functional.cosine_similarity(feat1, feat2)
-print(f"Similarity Score: {cos_sim.item()}")
+    cos_sim = torch.nn.functional.cosine_similarity(feat1, feat2)
+    if (cos_sim.item() > .85):
+        st.write("Repeat Image")
+    else:
+        st.write(cos_sim.item())
+    return (cos_sim.item() > .85)
