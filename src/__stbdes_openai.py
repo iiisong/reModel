@@ -1,5 +1,6 @@
-import src.openai_imgdesc as oai
-import src.stabledesign as sd
+# import __openai_imgdesc as oai
+from prompt_optimizer import optimize_prompt, identify_objects
+from stabledesign import stabledesign
 import os
 
 from PIL import Image
@@ -15,14 +16,13 @@ Some potential decor items and colors that are suitable include but are not limi
 '''
 
 def query_redesign(input_image: Image.Image, user_prompt: str) -> Image.Image :    
-    image_objs = oai.query_image_objects(input_image)
+    image_objs = identify_objects(input_image)
     # print(f'Objects: {image_objs}\n')
     
-    decor_ideas = oai.query_potential_decor_ideas(input_image, "This is a test description", image_objs)
+    decor_ideas = optimize_prompt(input_image, user_prompt, image_objs)
     # print(f'Decor Ideas: {decor_ideas}\n')
-
     
-    output = sd.stabledesign(input_image, PROMPT_TEMPLATE.format(
+    output = stabledesign(input_image, PROMPT_TEMPLATE.format(
         user_prompt=user_prompt,
         image_objects=image_objs,
         decor_ideas=decor_ideas

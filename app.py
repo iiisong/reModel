@@ -15,6 +15,8 @@ st.set_page_config(layout="wide")
 from src.products_parse import get_best_links_within_budget
 from src.product_search import product_search
 from src.stabledesign import stabledesign
+from src.product_search import product_search
+from src.stabledesign import stabledesign
 
 dotenv.load_dotenv()
 
