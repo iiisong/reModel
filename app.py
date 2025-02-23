@@ -114,6 +114,8 @@ if st.button('Reimagine Your Room', type="primary") and uploaded_file:
 
                 class_id = int(result.cls[0])
                 class_name = st.session_state['yolo_model'].names[class_id].capitalize()
+                if 'table' in class_name:
+                    class_name = 'table'
                 class_names.append(class_name)
                 
                 image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
