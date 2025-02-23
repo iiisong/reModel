@@ -19,8 +19,7 @@ def object_detect(img):
         x1, y1, x2, y2 = map(int, result.xyxy[0])
         cropped_object = img[y1:y2, x1:x2]
 
-        image_rgb = cv2.cvtColor(img, cv2.COLOR_RGB2BGR) 
-        sam_predictor.set_image(image_rgb)
+        sam_predictor.set_image(img)
         input_box = np.array([[x1, y1, x2, y2]])
         masks = sam_predictor.predict(box=input_box)
         

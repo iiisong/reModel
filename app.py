@@ -65,7 +65,6 @@ if st.button('Reimagine Your Room') and uploaded_file:
     st.image(gen_image, caption="After", use_container_width=True)
 
     orig_image = np.array(image)
-    orig_image = cv2.cvtColor(orig_image, cv2.COLOR_RGB2BGR)
     orig_img_arr = object_detect(orig_image)
 
     for img in orig_img_arr:
