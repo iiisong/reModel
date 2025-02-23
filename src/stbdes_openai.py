@@ -1,5 +1,5 @@
-import openai_imgdesc as oai
-import stabledesign as sd
+import src.openai_imgdesc as oai
+import src.stabledesign as sd
 import os
 
 from PIL import Image
@@ -16,10 +16,10 @@ Some potential decor items and colors that are suitable include but are not limi
 
 def query_redesign(input_image: Image.Image, user_prompt: str) -> Image.Image :    
     image_objs = oai.query_image_objects(input_image)
-    print(f'Objects: {image_objs}\n')
+    # print(f'Objects: {image_objs}\n')
     
     decor_ideas = oai.query_potential_decor_ideas(input_image, "This is a test description", image_objs)
-    print(f'Decor Ideas: {decor_ideas}\n')
+    # print(f'Decor Ideas: {decor_ideas}\n')
 
     
     output = sd.stabledesign(input_image, PROMPT_TEMPLATE.format(

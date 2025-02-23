@@ -12,6 +12,7 @@ import dotenv
 from src.stabledesign import stabledesign
 from src.products_parse import get_best_links_within_budget
 from src.reverse_img_search import reverse_image_search
+from src.stbdes_openai import query_redesign
 
 dotenv.load_dotenv()
 
@@ -59,7 +60,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
     
     st.image(image, caption="Before", use_container_width=True)
     
-    gen_image = stabledesign(image_path, prompt)
+    gen_image = query_redesign(image, prompt)
     
     st.image(gen_image, caption="After", use_container_width=True)
 
