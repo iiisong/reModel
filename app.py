@@ -57,12 +57,9 @@ prompt = st.text_input("Style", placeholder="Modern and minimalistic")
 uploaded_file = st.file_uploader("Choose a room...", type=["jpg", "jpeg", "png"])
 
 if st.button('Reimagine Your Room', type="primary") and uploaded_file:
-    st.write('### Reimagining your room...')
     
     container = st.container()
     
-    
-
     with container:
         col1, col2 = st.columns([1, 1])
 
@@ -73,7 +70,8 @@ if st.button('Reimagine Your Room', type="primary") and uploaded_file:
         with col1:
             st.image(image, caption="Before", width=400)
         
-        gen_image = stabledesign(image, prompt, optimize=True)
+        with st.spinner('### Reimagining your room...', show_time=True):
+            gen_image = stabledesign(image, prompt, optimize=True)
         
         with col1:
             st.image(gen_image, caption="After", width=400)
