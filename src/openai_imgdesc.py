@@ -3,6 +3,11 @@ import dotenv
 import os
 import base64
 
+from PIL import Image
+
+from io import BytesIO
+
+
 dotenv.load_dotenv()
 OPENAI_IMG_URL_TEMPLATE = "data:image/{file_extension};base64,{base64_image}"
 
@@ -12,18 +17,25 @@ def encode_image(image_path: str) -> str:
 
 
 
-def query_image_objects(img_path: str) -> str :
+def query_image_objects(input_img: Image.Image) -> str :
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     if not openai.api_key:
         raise Exception("API key is required")
 
-    input_image_path = img_path
-    base64_image = encode_image(input_image_path)
+    # input_image_path = img_path
+    # base64_image = encode_image(input_image_path)
+    
+    
+    
+    buffered = BytesIO()
+    input_img.save(buffered, format="PNG")
+    input_img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    
     
     image_data_url = OPENAI_IMG_URL_TEMPLATE.format(
-        file_extension=input_image_path.split('.')[-1],
-        base64_image=base64_image
+        file_extension='png',
+        base64_image=input_img_str
     )
 
 
@@ -56,7 +68,7 @@ def query_image_objects(img_path: str) -> str :
     response = openai.chat.completions.create(
         model="gpt-4o",
         messages=messages,
-        max_tokens=150
+        max_tokens=500
     )
 
     # print(response)
@@ -77,11 +89,16 @@ Please design a color scheme and list items that would suite the prompt found be
 "{user_description}"
 """
 
-def query_potential_decor_ideas(img_path: str, user_desc: str, query_img_objects: str = None) -> str:
+def query_potential_decor_ideas(input_image: Image.Image, user_desc: str, query_img_objects: str = None) -> Image.Image:
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     if not openai.api_key:
         raise Exception("API key is required")
+    
+    
+    buffered = BytesIO()
+    input_image.save(buffered, format="PNG")
+    input_img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
     
     messages = [
@@ -94,13 +111,13 @@ def query_potential_decor_ideas(img_path: str, user_desc: str, query_img_objects
             "content": [
                 {
                     "type": "text",
-                    "text": ('' if not query_image_objects else ITEMS_IN_IMAGE.format(items = query_image_objects)) + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
+                    "text": ('' if not query_img_objects else ITEMS_IN_IMAGE.format(items = query_img_objects)) + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
                 },
                 {
                     "type": "image_url",
                     "image_url": {"url": OPENAI_IMG_URL_TEMPLATE.format(
-                        file_extension=img_path.split('.')[-1],
-                        base64_image=encode_image(img_path)
+                        file_extension='png',
+                        base64_image=input_img_str
                     )}
                 }
             ]
@@ -110,7 +127,7 @@ def query_potential_decor_ideas(img_path: str, user_desc: str, query_img_objects
     response = openai.chat.completions.create(
         model="gpt-4o",
         messages=messages,
-        max_tokens=400
+        max_tokens=500
     )
     
     # print(response)
