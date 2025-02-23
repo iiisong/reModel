@@ -10,10 +10,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 
-def reverse_image_search(image_path):
+def reverse_image_search(image_path, headless=True):
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
-    options.add_argument("--headless")
+    if headless: 
+        options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
@@ -54,7 +55,8 @@ def reverse_image_search(image_path):
             if next_link and next_link["href"].startswith("http"):
                 price = span.get_text(strip=True)[:-1]
                 href = next_link["href"]
-                results.append({"price": price, "link": href})
+                img = span.parent.parent.parent.find('img')['src']
+                results.append({"price": price, "link": href, "img": img})
                 collected_items += 1
                 
     except Exception as e:
@@ -63,3 +65,9 @@ def reverse_image_search(image_path):
         driver.quit()
     
     return results
+
+if __name__ == "__main__":
+    print("Reverse Image Search")
+    image_path = "/Users/isaac/programming/hacklytics25/src/test_data/img-1.png"
+    results = reverse_image_search(image_path, False)
+    print(results)
