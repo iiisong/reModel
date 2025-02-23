@@ -58,19 +58,19 @@ if st.button('Reimagine Your Room') and uploaded_file:
     container = st.container()
 
     with container:
-        col1, col2 = st.columns([1, 1])
+        col1, col2 = st.columns([1, 2])
 
         image = Image.open(uploaded_file)
         image_path = tempfile.NamedTemporaryFile(delete=False, suffix='.png').name
         image.save(image_path)
         
         with col1:
-            st.image(image, caption="Before", use_container_width=True)
+            st.image(image, caption="Before", width=400)
         
         gen_image = query_redesign(image, prompt)
         
         with col1:
-            st.image(gen_image, caption="After", use_container_width=True)
+            st.image(gen_image, caption="After", width=400)
 
         final_image = np.array(gen_image)
         final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)
@@ -80,8 +80,17 @@ if st.button('Reimagine Your Room') and uploaded_file:
         all_results = []
         class_names = []
         
+        pri = []
+        last = []
+        for obj in results[0].boxes:
+            if 'plant' in (yolo_model.names[int(obj.cls[0])]):
+                last.append(obj)
+            else:
+                pri.append(obj)
+        objects = pri + last
+
         with col2: 
-            for i, result in enumerate(results[0].boxes):
+            for i, result in enumerate(objects):
                 x1, y1, x2, y2 = map(int, result.xyxy[0])
                 cropped_object = final_image[y1:y2, x1:x2]
 
