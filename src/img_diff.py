@@ -1,5 +1,5 @@
 from openai import OpenAI
-from utils import process_image
+from utils import process_image, OPENAI_IMG_URL_TEMPLATE
 
 client = OpenAI()
 
@@ -15,7 +15,6 @@ def img_diff(base_img, gen_img):
     base_img_b64: bytes = process_image(base_img)[0]
     gen_img_b64 = process_image(gen_img)[0]
     
-    
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -28,11 +27,21 @@ def img_diff(base_img, gen_img):
                     },
                     {
                         "type": "image_url", 
-                        "image_url": {"url": f"data:image/jpeg;base64,{base_img_b64}"}
+                        "image_url": {
+                            "url": OPENAI_IMG_URL_TEMPLATE.format(
+                                file_extension="jpeg",
+                                base64_image=base_img_b64
+                            )
+                        }
                     },
                     {
                         "type": "image_url", 
-                        "image_url": {"url": f"data:image/jpeg;base64,{gen_img_b64}"}
+                        "image_url": {
+                            "url": OPENAI_IMG_URL_TEMPLATE.format(
+                                file_extension="jpeg",
+                                base64_image=gen_img_b64
+                            )
+                        }
                     },
                 ]
             }
