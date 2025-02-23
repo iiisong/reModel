@@ -87,10 +87,12 @@ if st.button('Reimagine Your Room') and uploaded_file:
         mask = masks[0].astype(np.uint8) * 255
         masked_object = cv2.bitwise_and(cropped_object, cropped_object, mask=mask[y1:y2, x1:x2])
         
+        st.markdown(f"## {item['class_name']}")
+
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
             temp_file_path = temp_file.name
             cv2.imwrite(temp_file_path, masked_object)
-            st.image(temp_file_path, caption=f"{class_name}", width=150)
+            st.image(temp_file_path, width=150)
             
             object_results = reverse_image_search(temp_file_path)
             all_results.append(object_results)
@@ -98,7 +100,8 @@ if st.button('Reimagine Your Room') and uploaded_file:
             if object_results:
                 st.write(f"Similar Products for {class_name}:")
                 for item in object_results:
-                    st.write(item['price'], item['link'])
+                    st.write(f"Price: {item['price']}")
+                    st.write(f"Link: {item['link']}")
                     st.image(item['img'], width=150)
             else:
                 st.write("No relevant items found.")
