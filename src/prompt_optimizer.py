@@ -1,9 +1,10 @@
 import openai
+from PIL import Image
 
 from dotenv import load_dotenv
 load_dotenv()
 
-from utils import process_image, OPENAI_IMG_URL_TEMPLATE
+from src.utils import get_img_url
 
 ITEMS_IN_IMAGE = """
 In the room in the attached image, you have the following personal and furniture items: 
@@ -11,20 +12,24 @@ In the room in the attached image, you have the following personal and furniture
 {items} 
 
 """
+
 POTENTIAL_DECOR_TEXT_TEMPLATE = """
 Please design a color scheme and list items that would suite the prompt found below in quotation marks. Do not provide explanations. Select items that could fit in the image attached as well.
 
 "{user_description}"
 """
 
-def identify_objects(img_path: str) -> str :
-    base64_image = process_image(img_path)[0]
-    
-    image_data_url = OPENAI_IMG_URL_TEMPLATE.format(
-        file_extension=img_path.split('.')[-1],
-        base64_image=base64_image
-    )
+PROMPT_TEMPLATE = '''
+{user_prompt}
 
+The image contains the following objects at the following locations:
+{image_objects}
+
+Some potential decor items and colors that are suitable include but are not limited to:
+{decor_ideas}
+'''
+
+def identify_objects(image: Image.Image) -> str:
     messages = [
         {
             "role": "system",
@@ -44,7 +49,7 @@ def identify_objects(img_path: str) -> str :
                 },
                 {
                     "type": "image_url",
-                    "image_url": {"url": image_data_url}
+                    "image_url": get_img_url(image)
                 }
             ]
         }
@@ -53,13 +58,12 @@ def identify_objects(img_path: str) -> str :
     response = openai.chat.completions.create(
         model="gpt-4o",
         messages=messages,
-        max_tokens=150
+        max_tokens=500
     )
     
     return response.choices[0].message.content
 
-def optimize_query(img_path: str, user_desc: str, query_img_objects: str = None) -> str:
-    objects = identify_objects(img_path)
+def optimize_prompt(image: Image.Image, user_desc: str, image_objects: str = None) -> str:
     messages = [
         {
             "role": "system",
@@ -70,16 +74,11 @@ def optimize_query(img_path: str, user_desc: str, query_img_objects: str = None)
             "content": [
                 {
                     "type": "text",
-                    "text": ('' if not objects else ITEMS_IN_IMAGE.format(items=objects)) + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
+                    "text": ('' if not image_objects else ITEMS_IN_IMAGE.format(items=image_objects)) + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
                 },
                 {
                     "type": "image_url",
-                    "image_url": {
-                        "url": OPENAI_IMG_URL_TEMPLATE.format(
-                            file_extension=img_path.split('.')[-1],
-                            base64_image=process_image(img_path)[0]
-                        )
-                    }
+                    "image_url": get_img_url(image)
                 }
             ]
         }
@@ -91,8 +90,14 @@ def optimize_query(img_path: str, user_desc: str, query_img_objects: str = None)
         max_tokens=400
     )
     
-    return response.choices[0].message.content
+    prompt = PROMPT_TEMPLATE.format(
+        user_prompt=user_desc,
+        image_objects=image_objects,
+        decor_ideas=response.choices[0].message.content
+    )
+    
+    return prompt
 
 if __name__ == "__main__":
-    objects = identify_objects("test_data/input_img.png")
-    optimize_query("input_img.png", "A cozy and warm plant person's room with a lot of natural light and books.", objects)
+    image_objects = identify_objects("test_data/input_img.png")
+    optimize_prompt("input_img.png", "A cozy and warm plant person's room with a lot of natural light and books.", image_objects)

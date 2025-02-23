@@ -11,8 +11,8 @@ import dotenv
 
 from src.stabledesign import stabledesign
 from src.products_parse import get_best_links_within_budget
-from src.reverse_img_search import reverse_image_search
-from src.stbdes_openai import query_redesign
+from src.product_search import product_search
+from src.stabledesign import stabledesign
 
 dotenv.load_dotenv()
 
@@ -60,7 +60,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
     
     st.image(image, caption="Before", use_container_width=True)
     
-    gen_image = query_redesign(image, prompt)
+    gen_image = stabledesign(image, prompt, optimize=True)
     
     st.image(gen_image, caption="After", use_container_width=True)
 
@@ -95,7 +95,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
             cv2.imwrite(temp_file_path, masked_object)
             st.image(temp_file_path, width=150)
             
-            object_results = reverse_image_search(temp_file_path)
+            object_results = product_search(temp_file_path)
             all_results.append(object_results)
             
             if object_results:

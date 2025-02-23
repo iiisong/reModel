@@ -2,27 +2,22 @@ from PIL import Image
 import requests
 import replicate
 
-import base64
 from io import BytesIO
 
+from src.prompt_optimizer import optimize_prompt
+from src.utils import get_img_url
 
-OPENAI_IMG_URL_TEMPLATE = "data:image/{file_extension};base64,{base64_image}"
+STABLE_DESIGN_MODEL_ID = "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0"
 
-def stabledesign(input_image: Image.Image, prompt: str) -> Image.Image :
-    buffered = BytesIO()
-    input_image.save(buffered, format="PNG")
-    input_img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    
-    # input_i = {"prompt": prompt, "image_base": input_img_str}
-    input_i = {"prompt": prompt, "image_base": OPENAI_IMG_URL_TEMPLATE.format(
-                        file_extension='png',
-                        base64_image=input_img_str
-                    )}
-    
+def stabledesign(input_image: Image.Image, prompt: str, optimize=True) -> Image.Image:
+    params = {
+        "prompt": optimize_prompt(input_image, prompt) if optimize else prompt, 
+        "image_base": get_img_url(input_image)['url'],
+    }
     
     generated_image_url = replicate.run(
-        "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0",
-        input=input_i
+        STABLE_DESIGN_MODEL_ID,
+        input=params
     )
     
     response = requests.get(generated_image_url)
@@ -32,7 +27,17 @@ def stabledesign(input_image: Image.Image, prompt: str) -> Image.Image :
     return gen_image
 
 
-def save_image(img: Image, save_path: str):
+def save_image(img: Image.Image, save_path: str):
     img.save(save_path)
     
     return save_path
+
+if __name__ == "__main__":
+    base_img = "test_data/input_img.png"
+    gen_img_path = "test_data/OUTPUT.png"
+    prompt = 'Cottage core college dorm for a plant and book lover.'
+
+    input_image = Image.open(base_img)
+
+    output = stabledesign(input_image, prompt, optimize=False)
+    output.save(gen_img_path)

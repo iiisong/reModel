@@ -9,8 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from bs4 import BeautifulSoup
 
-
-def reverse_image_search(image_path, headless=True):
+def product_search(image_path, headless=True):
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
     if headless: 
@@ -69,5 +68,5 @@ def reverse_image_search(image_path, headless=True):
 if __name__ == "__main__":
     print("Reverse Image Search")
     image_path = "/Users/isaac/programming/hacklytics25/src/test_data/img-1.png"
-    results = reverse_image_search(image_path, False)
+    results = product_search(image_path, False)
     print(results)

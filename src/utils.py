@@ -1,10 +1,27 @@
-import base64, time, io
+import base64
+from io import BytesIO
 from PIL import Image
-from typing import Tuple
 
-OPENAI_IMG_URL_TEMPLATE = "data:image/{file_extension};base64,{base64_image}"
+def get_img_url(img: Image) -> dict:
+    """
+    Get the image URL for the OpenAI API.
 
-def process_image(path: str, max_size: int=1025) -> Tuple[str, int]:
+    Parameters:
+        img (Image): The image to encode.
+
+    Returns:
+        dict: The image URL.
+    """
+    OPENAI_IMG_URL_TEMPLATE = "data:image/{file_extension};base64,{base64_image}"
+    
+    return {
+        "url": OPENAI_IMG_URL_TEMPLATE.format(
+            file_extension='png',
+            base64_image=process_image(img)
+        )
+    }
+
+def process_image(image: Image.Image, max_size: int=1025) -> str:
     """
     Process an image from a given path, encoding it in base64. If the image is a PNG and smaller than max_size,
     it encodes the original. Otherwise, it resizes and converts the image to PNG before encoding.
@@ -16,19 +33,12 @@ def process_image(path: str, max_size: int=1025) -> Tuple[str, int]:
     Returns:
         Tuple[str, int]: A tuple containing the base64-encoded image and the size of the largest dimension.
     """
-    with Image.open(path) as image:
-        width, height = image.size
-        mimetype = image.get_format_mimetype()
-        if mimetype == "image/png" and width <= max_size and height <= max_size:
-            with open(path, "rb") as f:
-                encoded_image = base64.b64encode(f.read()).decode('utf-8')
-                return (encoded_image, max(width, height))
-        else:
-            resized_image = resize_image(image, max_size)
-            png_image = convert_to_png(resized_image)
-            return (base64.b64encode(png_image).decode('utf-8'),
-                    max(width, height)  # same tuple metadata
-                   )
+    width, height = image.size
+    if not (image.format == "PNG" and width <= max_size and height <= max_size):
+        image = resize_image(image, max_size)
+        
+    png_image = convert_to_png(image)
+    return base64.b64encode(png_image).decode('utf-8')
 
 def resize_image(image: Image.Image, max_dimension: int) -> Image.Image:
     """
@@ -58,9 +68,7 @@ def resize_image(image: Image.Image, max_dimension: int) -> Image.Image:
             new_height = max_dimension
             new_width = int(width * (max_dimension / height))
         image = image.resize((new_width, new_height), Image.LANCZOS)
-        
-        timestamp = time.time()
-
+    
     return image
 
 def convert_to_png(image: Image.Image) -> bytes:
@@ -73,14 +81,10 @@ def convert_to_png(image: Image.Image) -> bytes:
     Returns:
         bytes: The image in PNG format as a byte array.
     """
-    with io.BytesIO() as output:
+    with BytesIO() as output:
         image.save(output, format="PNG")
         return output.getvalue()
-
-
-def create_image_content(image, maxdim, detail_threshold):
-    detail = "low" if maxdim < detail_threshold else "high"
-    return {
-        "type": "image_url",
-        "image_url": {"url": f"data:image/png;base64,{image}", "detail": detail}
-    }
+    
+if __name__ == "__main__":
+    img = Image.open("test_data/base_room.png")
+    get_img_url(img)
