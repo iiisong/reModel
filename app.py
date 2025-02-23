@@ -98,7 +98,8 @@ if st.button('Reimagine Your Room') and uploaded_file:
             if object_results:
                 st.write(f"Similar Products for {class_name}:")
                 for item in object_results:
-                    st.write(item)
+                    st.write(item['price'], item['link'])
+                    st.image(item['img'], width=150)
             else:
                 st.write("No relevant items found.")
             
