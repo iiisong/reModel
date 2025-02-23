@@ -16,6 +16,21 @@ import tempfile
 import os
 import re
 from PIL import Image
+import replicate
+import base64
+import requests
+import dotenv
+from io import BytesIO
+
+dotenv.load_dotenv()
+
+REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
+
+if not REPLICATE_API_TOKEN:
+    st.error("Missing Replicate API token. Please check your .env file.")
+else:
+    replicate.client = replicate.Client(api_token=REPLICATE_API_TOKEN)
+
 
 yolo_model = YOLO("yolov8m.pt")
 
@@ -125,30 +140,49 @@ INTRO = """
 st.write(INTRO)
     
 budget = st.text_input("Budget", 1000)
-style = st.text_input("Style", placeholder="Modern and minimalistic")
+prompt = st.text_input("Style", placeholder="Modern and minimalistic")
 uploaded_file = st.file_uploader("Choose a room...", type=["jpg", "jpeg", "png"])
-reimagine = False
 
-if st.button('Reimagine Your Room') and uploaded_file is not None:
+
+if st.button('Reimagine Your Room') and uploaded_file:
     st.write('### Reimagining your room...')
-    reimagine = True
+    
+    image = Image.open(uploaded_file)
+    image_path = tempfile.NamedTemporaryFile(delete=False, suffix='.png').name
+    image.save(image_path)
+    
+    st.image(image, caption="Before", use_container_width=True)
+    
+    input = {"prompt": prompt, "image_base": open(image_path, "rb")}
+    generated_image_url = replicate.run(
+        "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0",
+        input=input
+    )
+    
+    response = requests.get(generated_image_url)
+    image_data = BytesIO(response.content)
+    gen_image = Image.open(image_data)
+    
+    st.image(gen_image, caption="After", use_container_width=True)
 
-if reimagine:
-    image = cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), 1)
-    results = yolo_model(image)
+    final_image = np.array(gen_image)
+
+    final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)
+
+    results = yolo_model(final_image)
     
     all_results = []
     class_names = []
     
     for i, result in enumerate(results[0].boxes):
         x1, y1, x2, y2 = map(int, result.xyxy[0])
-        cropped_object = image[y1:y2, x1:x2]
+        cropped_object = final_image[y1:y2, x1:x2]
 
         class_id = int(result.cls[0])
         class_name = yolo_model.names[class_id]
         class_names.append(class_name)
         
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
         sam_predictor.set_image(image_rgb)
         input_box = np.array([[x1, y1, x2, y2]])
         masks = sam_predictor.predict(box=input_box)
@@ -188,4 +222,3 @@ if reimagine:
             st.write("No items fit within the budget.")
     else:
         st.write("No relevant items found.")
-    reimagine = False
