@@ -54,6 +54,8 @@ def identify_objects(image: Image.Image) -> str:
             ]
         }
     ]
+    
+    print("\n\nIdentifying objects in image via model query...\n\n")
 
     response = openai.chat.completions.create(
         model="gpt-4o",
@@ -63,7 +65,13 @@ def identify_objects(image: Image.Image) -> str:
     
     return response.choices[0].message.content
 
-def optimize_prompt(image: Image.Image, user_desc: str, image_objects: str = None) -> str:
+def optimize_prompt(image: Image.Image, user_desc: str, image_objects: bool = True) -> str:
+    if image_objects :
+        image_objects = ITEMS_IN_IMAGE.format(items=identify_objects(image))
+    else :
+        image_objects = ""
+    
+    optimization_query_prompt = image_objects + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
     messages = [
         {
             "role": "system",
@@ -74,7 +82,7 @@ def optimize_prompt(image: Image.Image, user_desc: str, image_objects: str = Non
             "content": [
                 {
                     "type": "text",
-                    "text": ('' if not image_objects else ITEMS_IN_IMAGE.format(items=image_objects)) + POTENTIAL_DECOR_TEXT_TEMPLATE.format(user_description=user_desc)
+                    "text": optimization_query_prompt
                 },
                 {
                     "type": "image_url",
@@ -83,6 +91,14 @@ def optimize_prompt(image: Image.Image, user_desc: str, image_objects: str = Non
             ]
         }
     ]
+    
+    print(
+    f'''
+    Optimizing prompt with the following parameters:
+    {optimization_query_prompt = }
+    
+    Awaiting response from OpenAI...
+    ''')
     
     response = openai.chat.completions.create(
         model="gpt-4o",
