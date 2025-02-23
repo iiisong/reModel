@@ -13,7 +13,8 @@ def get_best_links_within_budget(results, budget, class_names):
     budget = float(budget)
     
     total_price = 0
-    selected_links = []
+    selected = []
+    class_matches = []
     
     for i, furniture_results in enumerate(results):
         selected_item = None
@@ -22,13 +23,10 @@ def get_best_links_within_budget(results, budget, class_names):
             if total_price + price <= budget:
                 selected_item = item
                 total_price += price
+                class_matches.append(class_names[i])
                 break
         
         if selected_item:
-            selected_links.append({
-                "price": selected_item["price"],
-                "link": selected_item["link"],
-                "class_name": class_names[i]
-            })
+            selected.append(selected_item)
     
-    return selected_links, total_price
+    return selected, total_price, class_matches
