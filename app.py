@@ -60,7 +60,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
     container = st.container()
 
     with container:
-        col1, col2 = st.columns([1, 2])
+        col1, col2 = st.columns([1, 1])
 
         image = Image.open(uploaded_file)
         image_path = tempfile.NamedTemporaryFile(delete=False, suffix='.png').name
