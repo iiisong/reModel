@@ -113,9 +113,10 @@ if st.button('Reimagine Your Room', type="primary") and uploaded_file:
                 cropped_object = final_image[y1:y2, x1:x2]
 
                 class_id = int(result.cls[0])
-                class_name = st.session_state['yolo_model'].names[class_id].capitalize()
+                class_name = st.session_state['yolo_model'].names[class_id]
                 if 'table' in class_name:
                     class_name = 'table'
+                class_name = class_name.capitalize()
                 class_names.append(class_name)
                 
                 image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
