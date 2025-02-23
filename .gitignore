@@ -353,3 +353,4 @@ cython_debug/
 
 
 output/*
+src/test_data/outputs/*

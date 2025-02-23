@@ -1,5 +1,5 @@
-import src.openai_imgdesc as oai
-import src.stabledesign as sd
+import openai_imgdesc as oai
+import stabledesign as sd
 import os
 
 from PIL import Image
@@ -18,7 +18,8 @@ def query_redesign(input_image: Image.Image, user_prompt: str) -> Image.Image :
     image_objs = oai.query_image_objects(input_image)
     # print(f'Objects: {image_objs}\n')
     
-    decor_ideas = oai.query_potential_decor_ideas(input_image, "This is a test description", image_objs)
+    # decor_ideas = oai.query_potential_decor_ideas(input_image, user_prompt, image_objs)
+    decor_ideas = oai.query_potential_decor_ideas(input_image, 'This is a test description', image_objs)
     # print(f'Decor Ideas: {decor_ideas}\n')
 
     
@@ -35,7 +36,8 @@ def query_redesign(input_image: Image.Image, user_prompt: str) -> Image.Image :
 
 if __name__ == "__main__":
     base_img = "test_data/base_room.png"
-    gen_img_path = "test_data/OUTPUT.png"
+    gen_img_path = "test_data/OUTPUTt.png"
+    # gen_img_path = "test_data/OUTPUT.png"
     
     prompt = 'Cottage core college dorm for a plant and book lover.'
 
