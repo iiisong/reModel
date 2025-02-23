@@ -87,7 +87,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
         mask = masks[0].astype(np.uint8) * 255
         masked_object = cv2.bitwise_and(cropped_object, cropped_object, mask=mask[y1:y2, x1:x2])
         
-        st.markdown(f"## {item['class_name']}")
+        st.markdown(f"## {class_name}")
 
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
             temp_file_path = temp_file.name
