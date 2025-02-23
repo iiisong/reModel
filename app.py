@@ -54,7 +54,7 @@ budget = st.text_input("Budget", 1000)
 prompt = st.text_input("Style", placeholder="Modern and minimalistic")
 uploaded_file = st.file_uploader("Choose a room...", type=["jpg", "jpeg", "png"])
 
-if st.button('Reimagine Your Room') and uploaded_file:
+if st.button('Reimagine Your Room', type="primary") and uploaded_file:
     st.write('### Reimagining your room...')
     
     container = st.container()
