@@ -28,13 +28,15 @@ else:
     replicate.client = replicate.Client(api_token=REPLICATE_API_TOKEN)
 
 
-yolo_model = YOLO("yolov8m.pt")
+if 'yolo_model' not in st.session_state:
+    print('Loading yolo_model')
+    st.session_state['yolo_model'] = YOLO("yolov8m.pt")
 
-sam_checkpoint = "sam_vit_h_4b8939.pth"
-model_type = "vit_h"
+    st.session_state['sam_checkpoint'] = "sam_vit_h_4b8939.pth"
+    st.session_state['model_type'] = "vit_h"
 
-sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
-sam_predictor = SamPredictor(sam)
+    st.session_state['sam'] = sam_model_registry[st.session_state['model_type']](checkpoint=st.session_state['sam_checkpoint'])
+    st.session_state['sam_predictor'] = SamPredictor(st.session_state['sam'])
 
 
 
@@ -58,6 +60,8 @@ if st.button('Reimagine Your Room') and uploaded_file:
     st.write('### Reimagining your room...')
     
     container = st.container()
+    
+    
 
     with container:
         col1, col2 = st.columns([1, 1])
@@ -77,7 +81,9 @@ if st.button('Reimagine Your Room') and uploaded_file:
         final_image = np.array(gen_image)
         final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)
 
-        results = yolo_model(final_image)
+
+
+        results = st.session_state['yolo_model'](final_image)
         
         all_results = []
         class_names = []
@@ -85,7 +91,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
         pri = []
         last = []
         for obj in results[0].boxes:
-            if 'plant' in (yolo_model.names[int(obj.cls[0])]):
+            if 'plant' in (st.session_state['yolo_model'].names[int(obj.cls[0])]):
                 last.append(obj)
             else:
                 pri.append(obj)
@@ -97,13 +103,13 @@ if st.button('Reimagine Your Room') and uploaded_file:
                 cropped_object = final_image[y1:y2, x1:x2]
 
                 class_id = int(result.cls[0])
-                class_name = yolo_model.names[class_id].capitalize()
+                class_name = st.session_state['yolo_model'].names[class_id].capitalize()
                 class_names.append(class_name)
                 
                 image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
-                sam_predictor.set_image(image_rgb)
+                st.session_state['sam_predictor'].set_image(image_rgb)
                 input_box = np.array([[x1, y1, x2, y2]])
-                masks = sam_predictor.predict(box=input_box)
+                masks = st.session_state['sam_predictor'].predict(box=input_box)
                 
                 mask = masks[0].astype(np.uint8) * 255
                 masked_object = cv2.bitwise_and(cropped_object, cropped_object, mask=mask[y1:y2, x1:x2])
