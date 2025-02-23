@@ -10,18 +10,27 @@ from src.utils import get_img_url
 STABLE_DESIGN_MODEL_ID = "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0"
 
 ADDITIONAL_PARAMS = {
-    'guidance_scale': 20,       # default 10
+    'guidance_scale': 10,       # default 10
     'num_steps': 50,            # default 50
-    'strength': 0.6             # default 0.9
+    'strength': 0.9             # default 0.9
 }
 
-def stabledesign(input_image: Image.Image, prompt: str, optimize: bool=True) -> Image.Image:
+def stabledesign(input_image: Image.Image, prompt: str, optimize: bool=True) -> Image.Image:    
     params = {
         "prompt": optimize_prompt(input_image, prompt) if optimize else prompt, 
         "image_base": get_img_url(input_image)['url'],
     }
     
     params.update(ADDITIONAL_PARAMS)
+    
+    print()
+    print(f'''
+          StableDesign Query 
+          {params["prompt"] = }
+          {ADDITIONAL_PARAMS = }
+          
+            Awaiting response from StableDesign...
+          ''')
     
     generated_image_url = replicate.run(
         STABLE_DESIGN_MODEL_ID,
