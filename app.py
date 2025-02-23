@@ -37,6 +37,7 @@ if 'yolo_model' not in st.session_state:
 
     st.session_state['sam'] = sam_model_registry[st.session_state['model_type']](checkpoint=st.session_state['sam_checkpoint'])
     st.session_state['sam_predictor'] = SamPredictor(st.session_state['sam'])
+    print('Loaded yolo_model')
 
 
 
@@ -57,116 +58,118 @@ prompt = st.text_input("Style", placeholder="Modern and minimalistic")
 uploaded_file = st.file_uploader("Choose a room...", type=["jpg", "jpeg", "png"])
 
 if st.button('Reimagine Your Room', type="primary") and uploaded_file:
-    st.write('### Reimagining your room...')
-    
-    container = st.container()
-    
-    
-
-    with container:
-        col1, col2 = st.columns([1, 1])
-
-        image = Image.open(uploaded_file)
-        image_path = tempfile.NamedTemporaryFile(delete=False, suffix='.png').name
-        image.save(image_path)
+    if 'uploaded_file_name' not in st.session_state or uploaded_file.name != st.session_state['uploaded_file_name'] :
+        st.session_state['uploaded_file_name'] = uploaded_file.name
+        st.write('### Reimagining your room...')
         
-        with col1:
-            st.image(image, caption="Before", width=400)
+        container = st.container()
         
-        gen_image = stabledesign(image, prompt, optimize=True)
         
-        with col1:
-            st.image(gen_image, caption="After", width=400)
 
-        final_image = np.array(gen_image)
-        final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)
+        with container:
+            col1, col2 = st.columns([1, 1])
 
-
-
-        results = st.session_state['yolo_model'](final_image)
-        
-        all_results = []
-        class_names = []
-        
-        pri = []
-        last = []
-        for obj in results[0].boxes:
-            if 'plant' in (st.session_state['yolo_model'].names[int(obj.cls[0])]):
-                last.append(obj)
-            else:
-                pri.append(obj)
-        objects = pri + last
-
-        with col2: 
-            for i, result in enumerate(objects):
-                x1, y1, x2, y2 = map(int, result.xyxy[0])
-                cropped_object = final_image[y1:y2, x1:x2]
-
-                class_id = int(result.cls[0])
-                class_name = st.session_state['yolo_model'].names[class_id].capitalize()
-                class_names.append(class_name)
-                
-                image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
-                st.session_state['sam_predictor'].set_image(image_rgb)
-                input_box = np.array([[x1, y1, x2, y2]])
-                masks = st.session_state['sam_predictor'].predict(box=input_box)
-                
-                mask = masks[0].astype(np.uint8) * 255
-                masked_object = cv2.bitwise_and(cropped_object, cropped_object, mask=mask[y1:y2, x1:x2])
-
-                with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-                    temp_file_path = temp_file.name
-                    cv2.imwrite(temp_file_path, masked_object)
-                    
-                    object_results = product_search(temp_file_path)
-                    all_results.append(object_results)
-                    
-                    with st.expander(f"{class_name}"):
-                        minicontainer = st.container()
-                        with minicontainer:
-                            minicol1, minicol2 = st.columns([1, 1])
-                            minicol1.image(temp_file_path, width=150)
-                            minicol2.markdown(f"<span style='font-weight: bold; text-transform: uppercase; font-size: 32px;'>{class_name}</span>", unsafe_allow_html=True)
-                        if object_results:
-                            for i, item in enumerate(object_results):
-                                 domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
-                                 st.markdown(f"""
-                                    <div style="border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-color: white; display: flex; align-items: center;">
-                                        <img src="{item['img']}" width="150" style="margin-right: 20px;" />
-                                        <div>
-                                            <p style="font-weight: bold;"><a href="{item['link']}">Product {i+1}</a></p>
-                                            <p><strong>Price:</strong> {item['price']}</p>
-                                            <p><strong>Domain:</strong> {domain}</p>
-                                        </div>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                        else:
-                            st.write("No relevant items found.")
-                    os.remove(temp_file_path)
-    
-        if all_results:
-            st.markdown("## Optimal Budgeted Products:")
-            selected, total_price, class_matches = get_best_links_within_budget(all_results, budget, class_names)
+            image = Image.open(uploaded_file)
+            image_path = tempfile.NamedTemporaryFile(delete=False, suffix='.png').name
+            image.save(image_path)
             
-            if selected:
-                st.write(f"Total Price: ${total_price:.2f}")
-                for itr, item in enumerate(selected):
-                    domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
-                    st.markdown(f"""
-                        <div style="border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-color: white; display: flex; flex-direction: column; align-items: flex-start;">
-                            <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">{class_matches[itr]}</div>
-                            <div style="display: flex; align-items: center;">
-                                <img src="{item['img']}" width="150" style="margin-right: 20px;" />
-                                <div>
-                                    <p style="font-weight: bold;"><a href="{item['link']}">Product {itr+1}</a></p>
-                                    <p><strong>Price:</strong> {item['price']}</p>
-                                    <p><strong>Domain:</strong> {domain}</p>
+            with col1:
+                st.image(image, caption="Before", width=400)
+            
+            gen_image = stabledesign(image, prompt, optimize=True)
+            
+            with col1:
+                st.image(gen_image, caption="After", width=400)
+
+            final_image = np.array(gen_image)
+            final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR)
+
+
+
+            results = st.session_state['yolo_model'](final_image)
+            
+            all_results = []
+            class_names = []
+            
+            pri = []
+            last = []
+            for obj in results[0].boxes:
+                if 'plant' in (st.session_state['yolo_model'].names[int(obj.cls[0])]):
+                    last.append(obj)
+                else:
+                    pri.append(obj)
+            objects = pri + last
+
+            with col2: 
+                for i, result in enumerate(objects):
+                    x1, y1, x2, y2 = map(int, result.xyxy[0])
+                    cropped_object = final_image[y1:y2, x1:x2]
+
+                    class_id = int(result.cls[0])
+                    class_name = st.session_state['yolo_model'].names[class_id].capitalize()
+                    class_names.append(class_name)
+                    
+                    image_rgb = cv2.cvtColor(final_image, cv2.COLOR_RGB2BGR) 
+                    st.session_state['sam_predictor'].set_image(image_rgb)
+                    input_box = np.array([[x1, y1, x2, y2]])
+                    masks = st.session_state['sam_predictor'].predict(box=input_box)
+                    
+                    mask = masks[0].astype(np.uint8) * 255
+                    masked_object = cv2.bitwise_and(cropped_object, cropped_object, mask=mask[y1:y2, x1:x2])
+
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
+                        temp_file_path = temp_file.name
+                        cv2.imwrite(temp_file_path, masked_object)
+                        
+                        object_results = product_search(temp_file_path)
+                        all_results.append(object_results)
+                        
+                        with st.expander(f"{class_name}"):
+                            minicontainer = st.container()
+                            with minicontainer:
+                                minicol1, minicol2 = st.columns([1, 1])
+                                minicol1.image(temp_file_path, width=150)
+                                minicol2.markdown(f"<span style='font-weight: bold; text-transform: uppercase; font-size: 32px;'>{class_name}</span>", unsafe_allow_html=True)
+                            if object_results:
+                                for i, item in enumerate(object_results):
+                                    domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
+                                    st.markdown(f"""
+                                        <div style="border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-color: white; display: flex; align-items: center;">
+                                            <img src="{item['img']}" width="150" style="margin-right: 20px;" />
+                                            <div>
+                                                <p style="font-weight: bold;"><a href="{item['link']}">Product {i+1}</a></p>
+                                                <p><strong>Price:</strong> {item['price']}</p>
+                                                <p><strong>Domain:</strong> {domain}</p>
+                                            </div>
+                                        </div>
+                                        """, unsafe_allow_html=True)
+                            else:
+                                st.write("No relevant items found.")
+                        os.remove(temp_file_path)
+        
+            if all_results:
+                st.markdown("## Optimal Budgeted Products:")
+                selected, total_price, class_matches = get_best_links_within_budget(all_results, budget, class_names)
+                
+                if selected:
+                    st.write(f"Total Price: ${total_price:.2f}")
+                    for itr, item in enumerate(selected):
+                        domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
+                        st.markdown(f"""
+                            <div style="border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-color: white; display: flex; flex-direction: column; align-items: flex-start;">
+                                <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">{class_matches[itr]}</div>
+                                <div style="display: flex; align-items: center;">
+                                    <img src="{item['img']}" width="150" style="margin-right: 20px;" />
+                                    <div>
+                                        <p style="font-weight: bold;"><a href="{item['link']}">Product {itr+1}</a></p>
+                                        <p><strong>Price:</strong> {item['price']}</p>
+                                        <p><strong>Domain:</strong> {domain}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    """, unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
 
+                else:
+                    st.write("No items fit within the budget.")
             else:
-                st.write("No items fit within the budget.")
-        else:
-            st.write("No relevant items found.")
+                st.write("No relevant items found.")
