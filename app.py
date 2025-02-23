@@ -139,7 +139,7 @@ if st.button('Reimagine Your Room', type="primary") and uploaded_file:
                             minicol2.markdown(f"<span style='font-weight: bold; text-transform: uppercase; font-size: 32px;'>{class_name}</span>", unsafe_allow_html=True)
                         if object_results:
                             for i, item in enumerate(object_results):
-                                 domain = urlparse(item['link']).netloc.split('.')[-2].capitalize()
+                                 domain = urlparse(item['link']).netloc.split('.')[1].capitalize()
                                  st.markdown(f"""
                                     <div style="border: 2px solid #000; padding: 10px; margin-bottom: 10px; border-color: white; display: flex; align-items: center;">
                                         <img src="{item['img']}" width="150" style="margin-right: 20px;" />
