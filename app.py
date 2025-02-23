@@ -18,6 +18,7 @@ from src.stabledesign import stabledesign
 from src.product_search import product_search
 from src.stabledesign import stabledesign
 
+
 dotenv.load_dotenv()
 
 REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
@@ -29,14 +30,25 @@ else:
 
 
 if 'yolo_model' not in st.session_state:
+    import time
+    times = [time.time()]
     print('Loading yolo_model')
     st.session_state['yolo_model'] = YOLO("yolov8m.pt")
+    times.append(time.time())
+    print(f'Loaded yolo_model in {times[-1] - times[-2]:.2f}s')
 
     st.session_state['sam_checkpoint'] = "sam_vit_h_4b8939.pth"
     st.session_state['model_type'] = "vit_h"
 
     st.session_state['sam'] = sam_model_registry[st.session_state['model_type']](checkpoint=st.session_state['sam_checkpoint'])
+    
+    times.append(time.time())
+    print(f'Loaded sam_model in {times[-1] - times[-2]:.2f}s')
+    
     st.session_state['sam_predictor'] = SamPredictor(st.session_state['sam'])
+    
+    times.append(time.time())
+    print(f'Loaded sam_predictor in {times[-1] - times[-2]:.2f}s')
 
 
 

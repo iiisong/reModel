@@ -10,9 +10,9 @@ from src.utils import get_img_url
 STABLE_DESIGN_MODEL_ID = "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0"
 
 ADDITIONAL_PARAMS = {
-    'guidance_scale': 10,       # default 10
+    'guidance_scale': 20,       # default 10
     'num_steps': 50,            # default 50
-    'strength': 0.9             # default 0.9
+    'strength': 0.7             # default 0.9
 }
 
 def stabledesign(input_image: Image.Image, prompt: str, optimize: bool=True) -> Image.Image:    
@@ -24,13 +24,15 @@ def stabledesign(input_image: Image.Image, prompt: str, optimize: bool=True) -> 
     params.update(ADDITIONAL_PARAMS)
     
     print()
-    print(f'''
-          StableDesign Query 
-          {params["prompt"] = }
-          {ADDITIONAL_PARAMS = }
-          
-            Awaiting response from StableDesign...
-          ''')
+    print()
+    print(f'StableDesign Query. \n\nParameters passed:')
+    
+    for k, v in params.items():
+        if k == 'image_base' :
+            continue
+        print(f'{k}: {v}')
+    
+    print(f'Awaiting response from StableDesign...')
     
     generated_image_url = replicate.run(
         STABLE_DESIGN_MODEL_ID,
@@ -40,6 +42,8 @@ def stabledesign(input_image: Image.Image, prompt: str, optimize: bool=True) -> 
     response = requests.get(generated_image_url)
     image_data = BytesIO(response.content)
     gen_image = Image.open(image_data)
+    
+    print(f'Received response from StableDesign. Proceeding.')
     
     return gen_image
 

@@ -1,3 +1,4 @@
+import re
 import openai
 from PIL import Image
 
@@ -27,6 +28,10 @@ The image contains the following objects at the following locations:
 
 Some potential decor items and colors that are suitable include but are not limited to:
 {decor_ideas}
+
+You should take many of the decor items. You should add posters to the walls, items on desks, additional chairs and tables and rugs to fill floor space.
+Clocks on the walls. Monitors or TVs on tables. Stools.
+The output should be photorealistic and high-quality. Try to avoid moving or removing objects already present in the image.
 '''
 
 def identify_objects(image: Image.Image) -> str:
@@ -55,7 +60,7 @@ def identify_objects(image: Image.Image) -> str:
         }
     ]
     
-    print("\n\nIdentifying objects in image via model query...\n\n")
+    print("\n\nIdentifying objects in image via model query...\n")
 
     response = openai.chat.completions.create(
         model="gpt-4o",
@@ -63,7 +68,13 @@ def identify_objects(image: Image.Image) -> str:
         max_tokens=500
     )
     
-    return response.choices[0].message.content
+    objs = response.choices[0].message.content
+    objs = re.findall(r"\[(.*?)\]", objs)
+    objs = "\n".join(objs)
+    
+    print(f"Objects identified: {objs}\nProceeding...\n\n")
+    
+    return objs
 
 def optimize_prompt(image: Image.Image, user_desc: str, image_objects: bool = True) -> str:
     if image_objects :
@@ -92,13 +103,12 @@ def optimize_prompt(image: Image.Image, user_desc: str, image_objects: bool = Tr
         }
     ]
     
-    print(
-    f'''
-    Optimizing prompt with the following parameters:
-    {optimization_query_prompt = }
+    print(f'Optimizing prompt with the following parameters:')
     
-    Awaiting response from OpenAI...
-    ''')
+    print('Query prompt requested for optimization: ')
+    print(optimization_query_prompt)
+    
+    print(f'\nAwaiting response from OpenAI...')
     
     response = openai.chat.completions.create(
         model="gpt-4o",
@@ -111,6 +121,11 @@ def optimize_prompt(image: Image.Image, user_desc: str, image_objects: bool = Tr
         image_objects=image_objects,
         decor_ideas=response.choices[0].message.content
     )
+    
+    print(f'Prompt optimized. Optimized prompt:\n')
+    print(prompt)
+    
+    print(f'\nProceeding...\n\n')
     
     return prompt
 
