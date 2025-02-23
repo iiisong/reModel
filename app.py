@@ -13,8 +13,8 @@ from urllib.parse import urlparse
 st.set_page_config(layout="wide")
 
 from src.products_parse import get_best_links_within_budget
-from src.reverse_img_search import reverse_image_search
-from src.stbdes_openai import query_redesign
+from src.product_search import product_search
+from src.stabledesign import stabledesign
 
 dotenv.load_dotenv()
 
@@ -67,7 +67,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
         with col1:
             st.image(image, caption="Before", width=400)
         
-        gen_image = query_redesign(image, prompt)
+        gen_image = stabledesign(image, prompt, optimize=True)
         
         with col1:
             st.image(gen_image, caption="After", width=400)
@@ -110,7 +110,7 @@ if st.button('Reimagine Your Room') and uploaded_file:
                     temp_file_path = temp_file.name
                     cv2.imwrite(temp_file_path, masked_object)
                     
-                    object_results = reverse_image_search(temp_file_path)
+                    object_results = product_search(temp_file_path)
                     all_results.append(object_results)
                     
                     with st.expander(f"{class_name}"):
