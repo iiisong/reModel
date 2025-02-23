@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="mi7N9GJhdiMdUrGBSjW2" name="Page-1">
-        <mxGraphModel dx="1989" dy="1124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1970" dy="1124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -23,7 +23,11 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="29" style="edgeStyle=none;html=1;" parent="1" source="4" target="27" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="310" y="390"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="4" value="OpenAI&lt;div&gt;&quot;Decorate this room with...&quot;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="200" width="160" height="60" as="geometry"/>
@@ -38,7 +42,9 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="20" style="edgeStyle=none;html=1;" parent="1" source="9" target="18" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="9" value="Grouping&lt;div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;Identify the added objects&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="480" width="160" height="60" as="geometry"/>
@@ -47,36 +53,36 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="Google Reverse Image Search&lt;div&gt;Google API or Selenium&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="120" y="620" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="120" y="570" width="160" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="17" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="14" target="16" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" style="edgeStyle=none;html=1;" parent="1" source="14" target="18" edge="1">
+                <mxCell id="19" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="14" target="18" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="290" y="700"/>
-                            <mxPoint x="340" y="430"/>
+                            <mxPoint x="300" y="650"/>
+                            <mxPoint x="300" y="410"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="14" value="Exact and Filter Results&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Top-K&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="120" y="760" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="120" y="710" width="160" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" value="Images&lt;div&gt;Prices&lt;/div&gt;&lt;div&gt;Companies&lt;/div&gt;&lt;div&gt;Location&lt;/div&gt;&lt;div&gt;etc.&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-70" y="750" width="120" height="80" as="geometry"/>
+                    <mxGeometry x="-70" y="700" width="120" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="25" style="edgeStyle=none;html=1;" parent="1" source="18" target="21" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="&lt;div&gt;Approximate&lt;/div&gt;&lt;div&gt;Similarity Check&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="460" y="200" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="340" y="200" width="160" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="28" style="edgeStyle=none;html=1;" parent="1" source="21" target="27" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="&lt;div&gt;Verification&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="700" y="200" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="580" y="200" width="160" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="24" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" parent="1" source="23" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -85,16 +91,16 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="23" value="Parameters&lt;div&gt;{style, buget, etc.}&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="354" y="30" width="120" height="80" as="geometry"/>
+                    <mxGeometry x="321" y="30" width="120" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="31" style="edgeStyle=none;html=1;" parent="1" source="27" target="30" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" value="OpenAI&lt;div&gt;Replace generated items in image with real items&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="460" y="340" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="360" y="360" width="160" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="30" value="Output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-                    <mxGeometry x="460" y="480" width="160" height="60" as="geometry"/>
+                    <mxGeometry x="360" y="500" width="160" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
