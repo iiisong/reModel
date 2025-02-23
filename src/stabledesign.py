@@ -15,3 +15,9 @@ def stabledesign(img_fp: str, prompt: str) -> Image:
     gen_image = Image.open(image_data)
     
     return gen_image
+
+
+def save_image(img: Image, save_path: str):
+    img.save(save_path)
+    
+    return save_path
