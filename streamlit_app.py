@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 import tempfile
 import os
 import re
+from PIL import Image
 
 yolo_model = YOLO("yolov8m.pt")
 
@@ -113,11 +114,26 @@ def get_best_links_within_budget(results, budget, class_names):
 
 st.title("Decorate Your Room")
 
+INTRO = """
+*Developed by Anthony Zang, Chandreyi (Zini) Chakraborty, Isaac Song, Kieran Slattery*
+
+*Hacklytics 2025 @ Georgia Tech*
+
+
+"""
+
+st.write(INTRO)
+    
 budget = st.text_input("Budget", 1000)
 style = st.text_input("Style", placeholder="Modern and minimalistic")
-uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Choose a room...", type=["jpg", "jpeg", "png"])
+reimagine = False
 
-if uploaded_file is not None:
+if st.button('Reimagine Your Room') and uploaded_file is not None:
+    st.write('### Reimagining your room...')
+    reimagine = True
+
+if reimagine:
     image = cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), 1)
     results = yolo_model(image)
     
@@ -172,3 +188,4 @@ if uploaded_file is not None:
             st.write("No items fit within the budget.")
     else:
         st.write("No relevant items found.")
+    reimagine = False
