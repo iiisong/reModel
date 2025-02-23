@@ -2,6 +2,8 @@ import base64, time, io
 from PIL import Image
 from typing import Tuple
 
+OPENAI_IMG_URL_TEMPLATE = "data:image/{file_extension};base64,{base64_image}"
+
 def process_image(path: str, max_size: int=1025) -> Tuple[str, int]:
     """
     Process an image from a given path, encoding it in base64. If the image is a PNG and smaller than max_size,

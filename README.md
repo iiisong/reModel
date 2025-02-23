@@ -1,2 +1,11 @@
-Required Downloads
-- [WebDriver](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+## Required Downloads
+### Webdriver
+Download Page: https://googlechromelabs.github.io/chrome-for-testing/#stable
+
+### Yolo8m
+Direct Download: https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8m.pt
+yolov8m from https://docs.ultralytics.com/models/yolov8/#performance-metrics
+
+### SAM
+Direct Download: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+VIT-H SAM default model from https://github.com/facebookresearch/segment-anything?tab=readme-ov-file#model-checkpoints
