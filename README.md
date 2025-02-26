@@ -1,5 +1,9 @@
 # ReModel
 
+This was a project we designed for the Georgia Tech Hacklytics 2025 Hackathon.
+
+[Link to our DevPost](https://devpost.com/software/baguettes?ref_content=my-projects-tab&ref_feature=my_projects).
+
 ## Models
 
 ### Current
@@ -18,20 +22,20 @@ Our current stack includes the following models:
 
 ### Past and Planned
 
-During our development phase and/or in our intended designs, we include the following models in addition to the current:
+During previous stages of our development and/or in the intended designs we had but weren't able to implement yet, we include the following models in addition to the current:
 
-| Model                                          | Origin         | Link                                                                                                            | Purpose and Details |
-| :--------------------------------------------- | :------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------ |
-| Contrastive Language-Image Pre-Training (CLIP) | OpenAI         | [GitHub](https://github.com/openai/CLIP)                                                                        |                     |
-| OmniGen                                        | VectorSpaceLab | [GitHub](https://github.com/VectorSpaceLab/OmniGen) & [Replicate](https://replicate.com/vectorspacelab/omnigen) |                     |
+| Model                                          | Origin         | Link                                                                                                                                                                                 | Purpose and Details |
+| :--------------------------------------------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------ |
+| Contrastive Language-Image Pre-Training (CLIP) | OpenAI         | [GitHub](https://github.com/openai/CLIP)                                                                                                                                             |                     |
+| OmniGen                                        | VectorSpaceLab | [GitHub](https://github.com/VectorSpaceLab/OmniGen) & [Replicate](https://replicate.com/vectorspacelab/omnigen) & [Hugging Face](https://huggingface.co/Shitao/OmniGen-v1/tree/main) |                     |
 
 ## Running Locally
 
-We recommend setting up a conda or venv environment to run this.
+We recommend setting up a `conda` or ve`nv environment to run this.
 
 ### 1. Python Requirements
 
-Within our pip requirements includes various packages for api calls and model downloads (such as for openai, CLIP, and replicate).
+Within our pip requirements includes various packages for api calls and model downloads (such as for `openai`, `CLIP`, and `replicate`).
 
 ```bash
 pip install -r requirements.txt
@@ -41,7 +45,7 @@ pip install -r requirements.txt
 
 This is used for our content matching phase for product matching purposes.
 
-Download Page: https://googlechromelabs.github.io/chrome-for-testing/#stable
+**Download Page**: https://googlechromelabs.github.io/chrome-for-testing/#stable
 
 ### 3. Local Model Setup
 
