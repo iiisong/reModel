@@ -5,7 +5,7 @@ from PIL import Image
 from dotenv import load_dotenv
 load_dotenv()
 
-from src.utils import get_img_url
+from utils import get_img_url
 
 ITEMS_IN_IMAGE = """
 In the room in the attached image, you have the following personal and furniture items: 

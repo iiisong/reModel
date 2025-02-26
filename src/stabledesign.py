@@ -4,8 +4,8 @@ import replicate
 
 from io import BytesIO
 
-from src.prompt_optimizer import optimize_prompt
-from src.utils import get_img_url
+from prompt_optimizer import optimize_prompt
+from utils import get_img_url
 
 STABLE_DESIGN_MODEL_ID = "melgor/stabledesign_interiordesign:5e13482ea317670bfc797bb18bace359860a721a39b5bbcaa1ffcd241d62bca0"
 
