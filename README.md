@@ -4,6 +4,8 @@ This was a project we designed for the Georgia Tech Hacklytics 2025 Hackathon.
 
 [Link to our DevPost](https://devpost.com/software/baguettes?ref_content=my-projects-tab&ref_feature=my_projects).
 
+![final_prototype](diagrams/p10FINAL.png)/
+
 ## Models
 
 ### Current
