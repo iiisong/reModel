@@ -12,15 +12,14 @@ This was a project we designed for the Georgia Tech Hacklytics 2025 Hackathon.
 
 Our current stack includes the following models:
 
-| Model                                | Origin        | Link                                                                                                | Purpose and Details |
-| :----------------------------------- | :------------ | :-------------------------------------------------------------------------------------------------- | :------------------ |
-| GPT-4o                               | OpenAI        | [OpenAI](https://openai.com/index/hello-gpt-4o/)                                                    |                     |
-| GPT-4o mini                          | OpenAI        | [OpenAI](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/)               |                     |
-| StableDesign                         |               |                                                                                                     |                     |
-| StableDiffusion                      |               |                                                                                                     |                     |
-| YOLO 8m                              | Ultralytics   | [GitHub](https://github.com/ultralytics/ultralytics) & [Docs](https://docs.ultralytics.com/)        |                     |
-| Segment Anything Model (SAM) `VIT-H` | Meta Research | [GitHub](https://github.com/facebookresearch/segment-anything?tab=readme-ov-file#model-checkpoints) |                     |
-|                                      |               |                                                                                                     |                     |
+| Model                                | Origin        | Link                                                                                                                                          | Purpose and Details                                  |
+| :----------------------------------- | :------------ | :-------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
+| GPT-4o                               | OpenAI        | [OpenAI](https://openai.com/index/hello-gpt-4o/)                                                                                              |                                                      |
+| GPT-4o mini                          | OpenAI        | [OpenAI](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/)                                                         |                                                      |
+| StableDesign                         |               | [Github](https://github.com/Lavreniuk/generative-interior-design) & [Replicate API](https://replicate.com/melgor/stabledesign_interiordesign) | Comprised of multiple other layered models including |
+| YOLO 8m                              | Ultralytics   | [GitHub](https://github.com/ultralytics/ultralytics) & [Docs](https://docs.ultralytics.com/)                                                  |                                                      |
+| Segment Anything Model (SAM) `VIT-H` | Meta Research | [GitHub](https://github.com/facebookresearch/segment-anything?tab=readme-ov-file#model-checkpoints)                                           |                                                      |
+|                                      |               |                                                                                                                                               |                                                      |
 
 ### Past and Planned
 
@@ -30,6 +29,7 @@ During previous stages of our development and/or in the intended designs we had 
 | :-------------------------------------------------------------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------ |
 | Contrastive Language-Image Pre-Training (CLIP) Commit `dcba3cb` | OpenAI         | [GitHub](https://github.com/openai/CLIP)                                                                                                                                             |                     |
 | OmniGen                                                         | VectorSpaceLab | [GitHub](https://github.com/VectorSpaceLab/OmniGen) & [Replicate](https://replicate.com/vectorspacelab/omnigen) & [Hugging Face](https://huggingface.co/Shitao/OmniGen-v1/tree/main) |                     |
+| StableDiffusion                                                 |                |                                                                                                                                                                                      |                     |
 
 ## Running Locally
 
