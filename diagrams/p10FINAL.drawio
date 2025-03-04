@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e" scale="1" border="3">
+<mxfile host="65bd71144e">
     <diagram id="mi7N9GJhdiMdUrGBSjW2" name="Page-1">
-        <mxGraphModel dx="1094" dy="787" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1232" dy="1729" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -206,7 +206,7 @@
                 <mxCell id="116" value="Product Recommendation Algorithm and Validation&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
                     <mxGeometry x="205" y="1009" width="160" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="145" style="edgeStyle=none;html=1;" parent="1" source="119" target="144" edge="1">
+                <mxCell id="145" style="edgeStyle=none;html=1;" edge="1" parent="1" source="119" target="144">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="119" value="Streamlit UI (Output)&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
@@ -244,10 +244,10 @@
                 <mxCell id="138" value="Contrastive Language-Image Pre-Training Neural Network&lt;div&gt;Similarity Analysis (CLIP)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
                     <mxGeometry x="595" y="685" width="160" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="143" value="Content Extraction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                <mxCell id="143" value="Content Extraction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
                     <mxGeometry x="755" y="440" width="160" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="144" value="User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                <mxCell id="144" value="User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
                     <mxGeometry x="205" y="1210" width="160" height="60" as="geometry"/>
                 </mxCell>
             </root>

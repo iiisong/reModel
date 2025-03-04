@@ -1,5 +1,6 @@
 .env
-<<<<<<< HEAD
+*.env
+*/.env
 .venv
 env/
 venv/
@@ -45,7 +46,6 @@ output/*
 
 sam_vit_h_4b8939.pth
 yolov8m.pt
-=======
 # Models
 sam_vit_h_4b8939.pth
 yolov8m.pt
@@ -222,10 +222,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-
 output/*
 src/test_data/outputs/*
-=======
-*.env
-*/.env
->>>>>>> planning
